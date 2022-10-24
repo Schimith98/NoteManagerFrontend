@@ -60,7 +60,7 @@ const Home = () => {
   const createBoard = async () => {
     try {
       const response = await serviceCreateBoard({ admin: user?._id });
-      console.log(response);
+
       getBoards();
     } catch (error) {
       console.log(error);
@@ -70,7 +70,7 @@ const Home = () => {
   const deleteBoard = async (_id: string | undefined) => {
     try {
       const response = await serviceDeleteBoard({ _id });
-      console.log(response);
+
       getBoards();
     } catch (error) {
       console.log(error);

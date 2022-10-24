@@ -69,7 +69,7 @@ const NoteForm = ({ isOpen, note, type, close, reload }: INoteEditForm) => {
         !!reload && reload();
       }
     } catch (error) {
-      console.log("error");
+      console.log(error);
       toast({
         title: "Erro!",
         description: "Falha ao acessar o servidor, tente novamnete mais tarde",

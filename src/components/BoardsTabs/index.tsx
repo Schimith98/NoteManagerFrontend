@@ -6,12 +6,10 @@ import {
   Tab,
   TabPanel,
   Flex,
-  Text,
 } from "@chakra-ui/react";
 import Note from "../Note";
 import { IBoard } from "../../interfaces/board";
 import { DeleteIcon, AddIcon } from "@chakra-ui/icons";
-import { HiOutlineShare } from "react-icons/hi";
 import NoteForm from "../NoteForm";
 import { INote } from "../../interfaces/note";
 import { getNotes as serviceGetNotes } from "../../services/note";
@@ -43,7 +41,7 @@ const BoardsTabs = ({
   const getNotes = async (boardId: string | undefined) => {
     try {
       const response = !!boardId && (await serviceGetNotes({ board: boardId }));
-      console.log(response);
+
       response && setNotes(response.data.notes);
     } catch (error) {
       console.log(error);
