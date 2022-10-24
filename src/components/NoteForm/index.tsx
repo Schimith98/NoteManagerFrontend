@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { INote } from "../../interfaces/note";
 import { createNote, editNote } from "../../services/note";
+import Loading from "../Loading";
 
 interface INoteEditForm {
   note?: INote;
@@ -34,9 +35,10 @@ const NoteForm = ({ isOpen, note, type, close, reload }: INoteEditForm) => {
   );
 
   const toast = useToast();
-
+  const [loading, setLoading] = useState<boolean>(false);
   const setNote = async () => {
     try {
+      setLoading(true);
       if (type === "new" && !!note) {
         const body = {
           title,
@@ -77,8 +79,13 @@ const NoteForm = ({ isOpen, note, type, close, reload }: INoteEditForm) => {
         duration: 9000,
         isClosable: true,
       });
+    } finally {
+      setLoading(false);
     }
   };
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>

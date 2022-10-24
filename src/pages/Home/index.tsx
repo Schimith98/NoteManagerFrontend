@@ -3,6 +3,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import BoardsTabs from "../../components/BoardsTabs";
 import Footer from "../../components/Footer";
+import Loading from "../../components/Loading";
 import Navbar from "../../components/Navbar";
 import { useAuth } from "../../context/auth";
 import { IBoard } from "../../interfaces/board";
@@ -23,37 +24,53 @@ const Home = () => {
       setContainer(newContainer);
     }
   };
-
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
     getBoards();
   }, [container]);
 
   const getAdminBoards = async () => {
     try {
+      setLoading(true);
       const response = await serviceGetAdminBoards({ admin: user?._id });
       return response;
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
   const getViwerBoards = async () => {
     try {
+      setLoading(true);
       const response = await serviceGetViwerBoards({ viwer: user?._id });
       return response;
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const getBoards = async () => {
-    if (container === "adm") {
-      const response = await getAdminBoards();
-      setBoards(response?.data.boards);
-    }
-    if (container === "viwer") {
-      const response = await getViwerBoards();
-      setBoards(response?.data.boards);
+    try {
+      if (container === "adm") {
+        const response = await getAdminBoards();
+        setBoards(response?.data.boards);
+      }
+      if (container === "viwer") {
+        const response = await getViwerBoards();
+        setBoards(response?.data.boards);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,11 +86,14 @@ const Home = () => {
 
   const deleteBoard = async (_id: string | undefined) => {
     try {
+      setLoading(true);
       const response = await serviceDeleteBoard({ _id });
 
       getBoards();
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 

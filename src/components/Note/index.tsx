@@ -15,6 +15,7 @@ import NoteForm from "../NoteForm";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 
 import { deleteNote as serviceDeleteNote } from "../../services/note";
+import Loading from "../Loading";
 interface INoteComponent {
   _id?: string;
   title?: string;
@@ -34,9 +35,11 @@ const Note = ({ _id, title, description, board, reload }: INoteComponent) => {
   };
 
   const toast = useToast();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const deleteNote = async () => {
     try {
+      setLoading(true);
       await serviceDeleteNote({ _id });
       reload();
     } catch (error) {
@@ -48,8 +51,13 @@ const Note = ({ _id, title, description, board, reload }: INoteComponent) => {
         duration: 9000,
         isClosable: true,
       });
+    } finally {
+      setLoading(false);
     }
   };
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>

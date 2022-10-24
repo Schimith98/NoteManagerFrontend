@@ -25,6 +25,7 @@ import {
   addViwer as serviceAddViwer,
   delViwer as serviceDelViwer,
 } from "../../services/board";
+import Loading from "../Loading";
 
 interface IShareModal {
   viwerBoards: string[] | undefined;
@@ -35,10 +36,11 @@ const ShareModal = ({ viwerBoards, boardId }: IShareModal) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [viwerId, setViwerId] = useState<string>("");
-
+  const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
   const addViwer = async () => {
     try {
+      setLoading(true);
       await serviceAddViwer({ _id: boardId, viwer: viwerId });
       toast({
         title: "Sucesso!",
@@ -56,10 +58,14 @@ const ShareModal = ({ viwerBoards, boardId }: IShareModal) => {
         duration: 9000,
         isClosable: true,
       });
+    } finally {
+      setLoading(false);
     }
   };
+
   const delViwer = async (viwerId: string) => {
     try {
+      setLoading(true);
       await serviceDelViwer({ _id: boardId, viwer: viwerId });
       toast({
         title: "Sucesso!",
@@ -77,8 +83,14 @@ const ShareModal = ({ viwerBoards, boardId }: IShareModal) => {
         duration: 9000,
         isClosable: true,
       });
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>

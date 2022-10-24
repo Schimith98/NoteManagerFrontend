@@ -46,6 +46,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
 
   const signIn = async (data: ILoginData) => {
     try {
+      setLoading(true);
       const response = await auth.signIn(data);
       setUser(response.data.user);
       await localStorage.setItem("@RNAuth:token", response.data.token);
@@ -71,6 +72,8 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
           isClosable: true,
         });
       }
+    } finally {
+      setLoading(false);
     }
   };
 

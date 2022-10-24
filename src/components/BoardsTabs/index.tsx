@@ -14,6 +14,7 @@ import NoteForm from "../NoteForm";
 import { INote } from "../../interfaces/note";
 import { getNotes as serviceGetNotes } from "../../services/note";
 import ShareModal from "../ShareModal";
+import Loading from "../Loading";
 interface IBoardsTabs {
   boards: IBoard[];
   createBoard: () => void;
@@ -38,13 +39,18 @@ const BoardsTabs = ({
   const [update, setUpdate] = useState<boolean>(false);
   const reload = () => setUpdate(!update);
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const getNotes = async (boardId: string | undefined) => {
     try {
+      setLoading(true);
       const response = !!boardId && (await serviceGetNotes({ board: boardId }));
 
       response && setNotes(response.data.notes);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,6 +58,10 @@ const BoardsTabs = ({
     tabIndex < boards.length && getNotes(boards[tabIndex]._id);
     // console.log(tabIndex);
   }, [tabIndex, boards, noteModalOpen, update]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>

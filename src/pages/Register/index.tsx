@@ -21,6 +21,7 @@ import { useToast } from "@chakra-ui/react";
 
 import { signUp as signUpService } from "../../services/auth";
 import Footer from "../../components/Footer";
+import Loading from "../../components/Loading";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -28,10 +29,11 @@ const Register = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-
+  const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
   const signup = async () => {
     try {
+      setLoading(true);
       const response = await signUpService({ name, email, password });
       if (response.status === 201) {
         toast({
@@ -60,8 +62,14 @@ const Register = () => {
           isClosable: true,
         });
       }
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
